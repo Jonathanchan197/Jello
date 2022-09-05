@@ -1,34 +1,57 @@
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import { useState, useEffect } from "react";
+import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import { Link } from "react-router-dom";
+import { UserAuth } from "../context/Auth";
 
-function Navigation() {
+const Navigation = () => {
+  const [isUser, setIsUser] = useState(false);
+  const { user } = UserAuth();
+
+  const checkUser = () => {
+    if (user) {
+      setIsUser(true);
+    }
+  };
+
+  useEffect(() => {
+    checkUser();
+  }, [user]);
+
   return (
     <Navbar bg="light" expand="lg">
       <Container>
-        <Navbar.Brand href="#home">Jello</Navbar.Brand>
+        <Navbar.Brand>Jello</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">Link</Nav.Link>
-            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
-                Separated link
-              </NavDropdown.Item>
-            </NavDropdown>
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="ms-auto">
+            {isUser ? (
+              <>
+                <Link to="/home" className="nav-link">
+                  Home
+                </Link>
+                <Navbar.Toggle />
+                <Navbar.Text>
+                  | Signed in as:{" "}
+                  <Link to="/profile">{user && user.email}</Link>
+                </Navbar.Text>
+              </>
+            ) : (
+              <>
+                <Link to="/signup" className="nav-link">
+                  Sign Up
+                </Link>
+                <Link to="/signin" className="nav-link">
+                  Sign In
+                </Link>
+              </>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
   );
-}
+};
 
 export default Navigation;
