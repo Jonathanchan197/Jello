@@ -5,13 +5,16 @@ import SignUp from "./SignUp";
 import SignIn from "./SignIn";
 import Home from "./Home";
 import Profile from "./Profile";
+import Trello from "./Trello";
 import { AuthContextProvider } from "../context/Auth";
 import ProtectedRoute from "./ProtectedRoute";
 import { Container } from "react-bootstrap";
-
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 function App() {
   return (
+    <DndProvider backend={HTML5Backend}>
     <div className="App">
       <AuthContextProvider>
       <Navigation/>
@@ -20,13 +23,15 @@ function App() {
           <Route path="/signup" element={<SignUp/>}/>
           <Route path="/signin" element={<SignIn/>}/>
           <Route path="/" element={<SignIn/>}/>
+          <Route path="/trello" element={<Trello/>}/>
           <Route path="/home" element={<ProtectedRoute><Home/></ProtectedRoute>}/>
           <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>}/>
         </Routes>
         </Container>
       </AuthContextProvider>
     </div>
-  );
+    </DndProvider>
+  )
 }
 
 export default App;
