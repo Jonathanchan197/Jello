@@ -1,34 +1,34 @@
 const initialData = {
     tasks: {
-      'task-1': { id: 'task-1', content: 'Take out the garbage' },
-      'task-2': { id: 'task-2', content: 'Watch my favorite show' },
-      'task-3': { id: 'task-3', content: 'Charge my phone' },
-      'task-4': { id: 'task-4', content: 'Cook dinner' },
+      'task_1': { id: 'task_1', content: 'Take out the garbage' },
+      'task_2': { id: 'task_2', content: 'Watch my favorite show' },
+      'task_3': { id: 'task_3', content: 'Charge my phone' },
+      'task_4': { id: 'task_4', content: 'Cook dinner' },
     },
     columns: {
-      'column-1': {
-        id: 'column-1',
+      'column_1': {
+        id: 'column_1',
         title: 'To do', 
-        taskIds: ['task-1', 'task-2', 'task-3', 'task-4'],
+        taskIds: ['task_1', 'task_2', 'task_3', 'task_4'],
       },
-      'column-2': {
-        id: 'column-2',
+      'column_2': {
+        id: 'column_2',
         title: 'In Progress',
         taskIds: [],
       },
-      'column-3': {
-        id: 'column-3',
+      'column_3': {
+        id: 'column_3',
         title: 'Done',
         taskIds: [],
       },
-      'column-4': {
-        id: 'column-4',
+      'column_4': {
+        id: 'column_4',
         title: 'Bug',
         taskIds: [],
       },
     },
     // Facilitate reordering of the columns
-    columnOrder: ['column-1', 'column-2', 'column-3', 'column-4'],
+    columnOrder: ['column_1', 'column_2', 'column_3', 'column_4'],
   };
   
   export default initialData;

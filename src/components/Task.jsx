@@ -11,6 +11,12 @@ const Container = styled.div`
 `;
 
 export default class Task extends React.Component {
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('test')
+  }
+
   render() {
     return (
       <Draggable draggableId={this.props.task.id} index={this.props.index}>

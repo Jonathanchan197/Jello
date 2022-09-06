@@ -1,124 +1,157 @@
 import React from "react";
-import initialData from "../initial-data";
 import Column from "./Column";
 import { DragDropContext } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { db } from "../firebase";
 
 const Container = styled.div`
-    display: flex;
+  display: flex;
 `;
 
-
 const Button = styled.button`
-background: transparent;
+  background: transparent;
   border-radius: 3px;
   border: 2px solid black;
   color: black;
   margin: 0 1em;
-  height: 30px;
+  height: 50px;
   margin-top: 8px;
   margin-left: 3px;
-  `
+`;
 
 class Trello extends React.Component {
-    state = {
-        columnOrder: [],
-        columns: {},
-        tasks: {}
+  constructor(props) {
+    super(props);
+  }
+
+  state = {
+    columnOrder: [],
+    columns: {},
+    tasks: {},
+  };
+
+  componentDidMount() {
+    console.log("mounted");
+    this.fetchBoard();
+  }
+
+  fetchBoard = () => {
+    db.collection("Workspaces")
+      .doc("aRzyA8nDdTpij51kLFMr")
+      .get()
+      .then((res) => {
+        this.setState(res.data());
+      })
+      .catch((error) => console.log(error));
+  };
+
+  postBoard(snapshot) {
+    db.collection("Workspaces").doc("aRzyA8nDdTpij51kLFMr").set(snapshot);
+    this.fetchBoard();
+  };
+
+  addColumn(e) {
+    e.preventDefault();
+    const random_id = (Math.random() + 1).toString(36).substring(7);
+    let temp = this.state
+    temp.columnOrder.push(random_id)
+    temp.columns = {...temp.columns, [random_id]: {
+        id: random_id,
+        title: 'Edit me!',
+        taskIds: [],
+      },}
+    this.postBoard(temp)
+  }
+
+  onDragEnd = (result) => {
+    const { destination, source, draggableId } = result;
+
+    if (!destination) {
+      return;
     }
 
-    componentDidMount() {
-        console.log('mounted')
-        db.collection("Workspaces")
-            .doc("aRzyA8nDdTpij51kLFMr")
-            .get()
-            .then(res => {
-                this.setState(res.data())
-            })
-            .catch(error => console.log(error))
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
     }
 
-    onDragEnd = result => {
-        const {destination, source, draggableId} = result;
+    const start = this.state.columns[source.droppableId];
+    const finish = this.state.columns[destination.droppableId];
 
-        if (!destination) {
-            return;
-        }
+    if (start === finish) {
+      const newTaskIds = Array.from(start.taskIds);
+      newTaskIds.splice(source.index, 1);
+      newTaskIds.splice(destination.index, 0, draggableId);
 
-        if (
-            destination.droppableId === source.droppableId &&
-            destination.index === source.index 
-        ) {
-            return;
-        }
+      const newColumn = {
+        ...start,
+        taskIds: newTaskIds,
+      };
 
-        const start = this.state.columns[source.droppableId];
-        const finish = this.state.columns[destination.droppableId];
+      const newState = {
+        ...this.state,
+        columns: {
+          ...this.state.columns,
+          [newColumn.id]: newColumn,
+        },
+      };
 
-        if (start === finish){
-            const newTaskIds = Array.from(start.taskIds);
-        newTaskIds.splice(source.index, 1);
-        newTaskIds.splice(destination.index, 0, draggableId);
+      this.setState(newState);
+      db.collection("Workspaces").doc("aRzyA8nDdTpij51kLFMr").set(newState);
+      return;
+    }
 
-        const newColumn = {
-            ...start,
-            taskIds: newTaskIds,
-        };
-
-        const newState = {
-            ...this.state,
-            columns: {
-                ...this.state.columns,
-                [newColumn.id]: newColumn,
-            },
-        };
-
-        this.setState(newState)
-        db.collection("Workspaces").doc("aRzyA8nDdTpij51kLFMr").set(newState);
-        return;
-        }
-
-        const startTaskIds = Array.from(start.taskIds);
-        startTaskIds.splice(source.index, 1);
-        const newStart = {
-            ...start,
-            taskIds: startTaskIds,
-        };
-
-        const finishTaskIds = Array.from(finish.taskIds);
-        finishTaskIds.splice(destination.index, 0, draggableId)
-        const newFinish = {
-            ...finish,
-            taskIds: finishTaskIds,
-        }
-
-        const newState = {
-            ...this.state,
-            columns: {
-                ...this.state.columns,
-                [newStart.id]: newStart,
-                [newFinish.id]: newFinish,
-            },
-        };
-        this.setState(newState);
-        db.collection("Workspaces").doc("aRzyA8nDdTpij51kLFMr").set(newState);
+    const startTaskIds = Array.from(start.taskIds);
+    startTaskIds.splice(source.index, 1);
+    const newStart = {
+      ...start,
+      taskIds: startTaskIds,
     };
 
-    render() {
-        return (
-            <DragDropContext onDragEnd={this.onDragEnd}>
-                <Container>
-                {this.state.columnOrder.map(columnId => {
-                    const column = this.state.columns[columnId];
-                    const tasks = column.taskIds.map(taskId => this.state.tasks[taskId]);
-                return <Column key={column.id} column={column} tasks={tasks} />;
-            })}
-            <Button>Add List</Button>
+    const finishTaskIds = Array.from(finish.taskIds);
+    finishTaskIds.splice(destination.index, 0, draggableId);
+    const newFinish = {
+      ...finish,
+      taskIds: finishTaskIds,
+    };
+
+    const newState = {
+      ...this.state,
+      columns: {
+        ...this.state.columns,
+        [newStart.id]: newStart,
+        [newFinish.id]: newFinish,
+      },
+    };
+    this.setState(newState);
+    db.collection("Workspaces").doc("aRzyA8nDdTpij51kLFMr").set(newState);
+  };
+
+  render() {
+    return (
+      <DragDropContext onDragEnd={this.onDragEnd}>
+        <Container>
+          {this.state.columnOrder.map((columnId) => {
+            const column = this.state.columns[columnId];
+            const tasks = column.taskIds.map(
+              (taskId) => this.state.tasks[taskId]
+            );
+            return (
+              <Column
+                fetchBoard={this.fetchBoard}
+                key={column.id}
+                column={column}
+                tasks={tasks}
+              />
+            );
+          })}
+          <Button onClick={(e) => this.addColumn(e)}>Add List</Button>
         </Container>
-        </DragDropContext>
-        )
-    }
+      </DragDropContext>
+    );
+  }
 }
 
-export default Trello
+export default Trello;
