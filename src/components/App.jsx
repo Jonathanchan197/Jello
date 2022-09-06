@@ -9,12 +9,9 @@ import Trello from "./Trello";
 import { AuthContextProvider } from "../context/Auth";
 import ProtectedRoute from "./ProtectedRoute";
 import { Container } from "react-bootstrap";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 
 function App() {
   return (
-    <DndProvider backend={HTML5Backend}>
     <div className="App">
       <AuthContextProvider>
       <Navigation/>
@@ -30,7 +27,6 @@ function App() {
         </Container>
       </AuthContextProvider>
     </div>
-    </DndProvider>
   )
 }
 
