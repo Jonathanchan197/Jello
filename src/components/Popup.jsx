@@ -29,53 +29,87 @@ const Content = styled.div`
   border: 2px solid black;
 `;
 
-const Close = styled.span`
+const Close = styled.button`
   position: absolute;
   top: 5px;
   right: 16px;
   font-size: 200%;
+  background: transparent;
+  border: none !important;
 `;
 
-const Edit = styled.span`
+const Edit = styled.button`
   position: absolute;
   top: 5px;
   right: 70px;
   font-size: 200%;
+  background: transparent;
+  border: none !important;
+`;
+
+const Button = styled.button`
+  background: transparent;
+  border-radius: 3px;
+  border: 2px solid black;
+  color: black;
+  margin: 0 1em;
+  height: 30px;
+  width: 110px;
+  margin-top: 8px;
 `;
 
 function Popup(props) {
-  const [edit, setEdit] = useState(false);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [edit, setEdit] = useState(true);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [tempDatabase, setTempDatabase] = useState({});
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setEdit(!edit)
-    console.log('submit')
-    db.collection("Workspaces")
-    .doc("aRzyA8nDdTpij51kLFMr")
-    .get()
-    .then((res) => {
-      setTempDatabase(res.data());
-    })
-    .catch((error) => console.log(error));
-    const currentTask = [props.info.task.id]
+    setEdit(!edit);
+    const currentTask = [props.info.task.id];
     tempDatabase.tasks[currentTask] = {
-        content: title,
-        description: description,
-    }
-    props.info.task.content = title
-    props.info.task.description = description
-    db.collection("Workspaces").doc("aRzyA8nDdTpij51kLFMr").set(tempDatabase);    
-  }
+      content: title,
+      description: description,
+      id: props.info.task.id
+    };
+    props.info.task.content = title;
+    props.info.task.description = description;
+    db.collection("Workspaces").doc("aRzyA8nDdTpij51kLFMr").set(tempDatabase);
+  };
 
   const closePopup = (e) => {
     e.preventDefault();
     if (!edit) {
-    setEdit(!edit)
+      setEdit(!edit);
     }
-    props.handler(e)
+    props.handler(e);
+  };
+
+  const loadEdit = (e) => {
+    e.preventDefault();
+    setEdit(!edit);
+    db.collection("Workspaces")
+      .doc("aRzyA8nDdTpij51kLFMr")
+      .get()
+      .then((res) => {
+        setTempDatabase(res.data());
+      })
+      .catch((error) => console.log(error));
+  }
+
+  const deleteTask = (e) => {
+    e.preventDefault();
+    console.log(tempDatabase)
+    const currentTask = [props.info.task.id];
+    const currentLocation = [props.info.column.id];
+    const currentIndex = [props.info.index];
+    delete tempDatabase.tasks[currentTask];
+    console.log(tempDatabase)
+    tempDatabase.columns[currentLocation].taskIds.pop([currentIndex]);
+    db.collection("Workspaces").doc("aRzyA8nDdTpij51kLFMr").set(tempDatabase);
+    closePopup(e)
+    props.fetchBoard();
   }
 
   return props.trigger ? (
@@ -85,7 +119,7 @@ function Popup(props) {
           <Close onClick={(e) => closePopup(e)}>❌</Close>
           {edit ? (
             <>
-              <Edit onClick={(e) => setEdit(!edit)}>✏️</Edit>
+              <Edit onClick={(e) => loadEdit(e)}>✏️</Edit>
             </>
           ) : (
             <>
@@ -96,7 +130,7 @@ function Popup(props) {
           {edit ? (
             <>
               <h2>{props.info.task.content}</h2>
-              <p>Found in: {props.info.columnName}</p>
+              <p>Found in list: {props.info.column.title}</p>
               {/* <p>{props.info.index}</p> */}
               <h4>Description</h4>
               <p>{props.info.task.description}</p>
@@ -109,14 +143,25 @@ function Popup(props) {
                 </Form.Group>
                 <Form.Group className="mb-3" id="email">
                   <Form.Label>Title</Form.Label>
-                  <Form.Control onChange={(e) => setTitle(e.target.value)} type="text" placeholder={props.info.task.content}/>
+                  <Form.Control
+                    onChange={(e) => setTitle(e.target.value)}
+                    type="text"
+                    placeholder={props.info.task.content}
+                  />
                 </Form.Group>
 
                 <Form.Group className="mb-3" id="password">
                   <Form.Label>Description</Form.Label>
-                  <Form.Control onChange={(e) => setDescription (e.target.value)} type="text" as="textarea" rows="10" placeholder={props.info.task.description}/>
+                  <Form.Control
+                    onChange={(e) => setDescription(e.target.value)}
+                    type="text"
+                    as="textarea"
+                    rows="5"
+                    placeholder={props.info.task.description}
+                  />
                 </Form.Group>
               </Form>
+          <Button onClick={(e) => deleteTask(e)}>Delete Task</Button>
             </>
           )}
         </Content>

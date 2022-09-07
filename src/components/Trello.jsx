@@ -41,11 +41,14 @@ class Trello extends React.Component {
       .get()
       .then((res) => {
         this.setState(res.data());
+        console.log('fetch sucess')
       })
       .catch((error) => console.log(error));
   };
 
   postBoard(snapshot) {
+    delete snapshot.popup
+    delete snapshot.popupInfo
     db.collection("Workspaces").doc("aRzyA8nDdTpij51kLFMr").set(snapshot);
     this.fetchBoard();
   };
@@ -107,7 +110,7 @@ class Trello extends React.Component {
       };
 
       this.setState(newState);
-      db.collection("Workspaces").doc("aRzyA8nDdTpij51kLFMr").set(newState);
+      this.postBoard(newState)
       return;
     }
 
@@ -134,7 +137,7 @@ class Trello extends React.Component {
       },
     };
     this.setState(newState);
-    db.collection("Workspaces").doc("aRzyA8nDdTpij51kLFMr").set(newState);
+    this.postBoard(newState)
   };
 
   render() {
@@ -157,8 +160,7 @@ class Trello extends React.Component {
             );
           })}
           <Button onClick={(e) => this.addColumn(e)}>Add List</Button>
-          <Button onClick={this.handler}>test</Button>
-            <Popup handler={this.handler} trigger={this.state.popup} info={this.state.popupInfo}>
+            <Popup fetchBoard={this.fetchBoard} handler={this.handler} trigger={this.state.popup} info={this.state.popupInfo}>
             </Popup>
         </Container>
       </DragDropContext>

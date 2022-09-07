@@ -19,7 +19,7 @@ function App() {
         <Routes>
           <Route path="/signup" element={<SignUp/>}/>
           <Route path="/signin" element={<SignIn/>}/>
-          <Route path="/" element={<SignIn/>}/>
+          <Route path="/" element={<Home/>}/>
           <Route path="/trello" element={<Trello/>}/>
           <Route path="/home" element={<ProtectedRoute><Home/></ProtectedRoute>}/>
           <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>}/>
