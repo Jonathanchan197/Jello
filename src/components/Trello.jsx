@@ -29,7 +29,6 @@ class Trello extends React.Component {
     columnOrder: [],
     columns: {},
     tasks: {},
-    popup: true,
   };
 
   componentDidMount() {
@@ -66,8 +65,8 @@ class Trello extends React.Component {
 
   handler = (e, info) => {
     e.preventDefault();
-    console.log(info)
     this.setState({
+        popupInfo: info,
         popup: !this.state.popup
     })
   }
@@ -159,8 +158,7 @@ class Trello extends React.Component {
           })}
           <Button onClick={(e) => this.addColumn(e)}>Add List</Button>
           <Button onClick={this.handler}>test</Button>
-            <Popup handler={this.handler} trigger={this.state.popup}>
-              <h3>My popup</h3>
+            <Popup handler={this.handler} trigger={this.state.popup} info={this.state.popupInfo}>
             </Popup>
         </Container>
       </DragDropContext>
