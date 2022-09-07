@@ -8,13 +8,23 @@ const Container = styled.div`
   padding: 8px;
   margin-bottom: 8px;
   background-color: white;
+  display: flex;
+`;
+
+const Handle = styled.div`
+  width: 20px;
+  height: 20px;
+  background-color: grey;
+  border-radius 4px;
+  margin-right: 8px
 `;
 
 export default class Task extends React.Component {
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('test')
+  
+  taskProps = (e) => {
+    e.preventDefault()
+    const taskInfo = this.props
+    this.props.handler(e, taskInfo)
   }
 
   render() {
@@ -22,10 +32,13 @@ export default class Task extends React.Component {
       <Draggable draggableId={this.props.task.id} index={this.props.index}>
         {provided => (
           <Container
+            onClick={(e) => this.taskProps(e)}
             {...provided.draggableProps}
-            {...provided.dragHandleProps}
             ref={provided.innerRef}
           >
+            <Handle 
+            {...provided.dragHandleProps}
+            />
             {this.props.task.content}
           </Container>
         )}

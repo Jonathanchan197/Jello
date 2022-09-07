@@ -3,6 +3,7 @@ import Column from "./Column";
 import { DragDropContext } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { db } from "../firebase";
+import Popup from "./Popup";
 
 const Container = styled.div`
   display: flex;
@@ -28,10 +29,10 @@ class Trello extends React.Component {
     columnOrder: [],
     columns: {},
     tasks: {},
+    popup: true,
   };
 
   componentDidMount() {
-    console.log("mounted");
     this.fetchBoard();
   }
 
@@ -61,6 +62,14 @@ class Trello extends React.Component {
         taskIds: [],
       },}
     this.postBoard(temp)
+  }
+
+  handler = (e, info) => {
+    e.preventDefault();
+    console.log(info)
+    this.setState({
+        popup: !this.state.popup
+    })
   }
 
   onDragEnd = (result) => {
@@ -140,6 +149,7 @@ class Trello extends React.Component {
             );
             return (
               <Column
+                handler={this.handler}
                 fetchBoard={this.fetchBoard}
                 key={column.id}
                 column={column}
@@ -148,6 +158,10 @@ class Trello extends React.Component {
             );
           })}
           <Button onClick={(e) => this.addColumn(e)}>Add List</Button>
+          <Button onClick={this.handler}>test</Button>
+            <Popup handler={this.handler} trigger={this.state.popup}>
+              <h3>My popup</h3>
+            </Popup>
         </Container>
       </DragDropContext>
     );

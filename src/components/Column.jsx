@@ -31,7 +31,6 @@ export default class Column extends React.Component {
   };
 
   componentDidMount() {
-    console.log("mounted");
     this.fetchBoard();
   }
 
@@ -77,7 +76,9 @@ export default class Column extends React.Component {
           {(provided) => (
             <TaskList ref={provided.innerRef} {...provided.droppableProps}>
               {this.props.tasks.map((task, index) => (
-                <Task key={task.id} task={task} index={index} />
+                <Task key={task.id} task={task} index={index} 
+                handler={this.props.handler}
+                />
               ))}
               {provided.placeholder}
             </TaskList>
