@@ -45,11 +45,17 @@ export default class Column extends React.Component {
 
   componentDidMount() {
     this.fetchBoard();
+    this.fetchUrl();
+  }
+
+  fetchUrl = () => {
+    const url = window.location.pathname
+    return(url.replace(/\//g,""))
   }
 
   fetchBoard = () => {
     db.collection("Workspaces")
-      .doc("aRzyA8nDdTpij51kLFMr")
+      .doc(this.fetchUrl())
       .get()
       .then((res) => {
         this.setState(res.data());
@@ -58,7 +64,7 @@ export default class Column extends React.Component {
   };
 
   postBoard = (snapshot) => {
-    db.collection("Workspaces").doc("aRzyA8nDdTpij51kLFMr").set(snapshot);
+    db.collection("Workspaces").doc(this.fetchUrl()).set(snapshot);
     this.props.fetchBoard();
   };
 

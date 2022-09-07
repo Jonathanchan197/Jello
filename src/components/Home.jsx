@@ -1,58 +1,67 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { useNavigate } from 'react-router-dom';
-import { Card} from 'react-bootstrap';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import { db } from '../firebase';
+import { useNavigate } from "react-router-dom";
+import { Card, Row, Col } from "react-bootstrap";
+import { db } from "../firebase";
+import { Link } from "react-router-dom";
 
 const Home = () => {
-    const [user,setUser] = useState('')
-    const [workspaces, setWorkspaces] = useState('')
-    const auth = getAuth();
-    const navigate = useNavigate
-    
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // console.log(user.uid)
-        setUser(user)
-      } else {
-        navigate('/signin')
-      }
-    });
+  const [user, setUser] = useState("");
+  const [workspaces, setWorkspaces] = useState([]);
+  const auth = getAuth();
+  const navigate = useNavigate();
 
-    useEffect(() => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // console.log(user.uid)
+      setUser(user);
+    } else {
+      navigate("/signin");
+    }
+  });
+
+  useEffect(() => {
+    let isMounted = true
+    const fetchWorkspace = async () => {
       db.collection("Workspaces")
-      .where("users", "array-contains", "jonathan")
-      .get()
-      .then((res) => {
-        setWorkspaces(res.docs.map(doc => (doc.data())));
-        console.log(workspaces)
-      })
-      .catch((error) => console.log(error));
-    },[])
+        .where("users", "array-contains", "jonathan")
+        .get()
+        .then((res) => {
+          if (isMounted) {
+            setWorkspaces(res.docs.map((doc) => doc.data()));
+            console.log(workspaces);
+          }
+        });
+    };
+    fetchWorkspace();
+    return () =>{isMounted = false}
+  }, []);
 
-    return (
-        <div>
-            <h1>Welcome Back! {user.email}</h1>
-            <h2>Your workspaces:</h2>
-            <Row xs={10} md={4} className="g-4">
-      {Array.from({ length: 5 }).map((_, idx) => (
+  return (
+    <div>
+      <h1>Welcome Back! {user.email}</h1>
+      <h2>Your workspaces:</h2>
+      <Row xs={2} md={4} className="g-4">
+      {workspaces.length? workspaces.map((w) => (
         <Col>
-          <Card style={{ width: '18rem' }}>
-      <Card.Body>
-        <Card.Title>Card Title</Card.Title>
-        <Card.Text>
-          Members: 
-        </Card.Text>
-        <Card.Link href="#">Invite Members</Card.Link>
-      </Card.Body>
-    </Card>
-        </Col>
-      ))}
+      <Card key={w.name} style={{ width: "18rem" }}>
+        <Card.Body>
+          <Card.Title><Link to={`/${w.name}`} className="nav-link">
+                  {w.name}
+                </Link></Card.Title>
+          <Card.Text>
+            Members:
+              {w.users.map((user) => <li>{user}</li>)}
+          </Card.Text>
+          <Card.Link href={`/workspace/:id`}>Invite Members</Card.Link>
+        </Card.Body>
+      </Card>
+      </Col>
+      )):<></>}
     </Row>
-        </div>
-    )
-}
+    </div>
+  );
+};
 
-export default Home
+export default Home;
+

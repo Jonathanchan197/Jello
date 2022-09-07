@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Form } from "react-bootstrap";
 import { db } from "../firebase";
+import { useParams } from "react-router-dom";
 
 const Container = styled.div`
   position: fixed;
@@ -63,6 +64,7 @@ function Popup(props) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [tempDatabase, setTempDatabase] = useState({});
+  const { id } = useParams();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -75,7 +77,7 @@ function Popup(props) {
     };
     props.info.task.content = title;
     props.info.task.description = description;
-    db.collection("Workspaces").doc("aRzyA8nDdTpij51kLFMr").set(tempDatabase);
+    db.collection("Workspaces").doc(id).set(tempDatabase);
   };
 
   const closePopup = (e) => {
@@ -83,6 +85,7 @@ function Popup(props) {
     if (!edit) {
       setEdit(!edit);
     }
+    console.log(id)
     props.handler(e);
   };
 
@@ -90,7 +93,7 @@ function Popup(props) {
     e.preventDefault();
     setEdit(!edit);
     db.collection("Workspaces")
-      .doc("aRzyA8nDdTpij51kLFMr")
+      .doc(id)
       .get()
       .then((res) => {
         setTempDatabase(res.data());
@@ -107,7 +110,7 @@ function Popup(props) {
     delete tempDatabase.tasks[currentTask];
     console.log(tempDatabase)
     tempDatabase.columns[currentLocation].taskIds.pop([currentIndex]);
-    db.collection("Workspaces").doc("aRzyA8nDdTpij51kLFMr").set(tempDatabase);
+    db.collection("Workspaces").doc(id).set(tempDatabase);
     closePopup(e)
     props.fetchBoard();
   }

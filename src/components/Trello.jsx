@@ -33,15 +33,21 @@ class Trello extends React.Component {
 
   componentDidMount() {
     this.fetchBoard();
+    this.fetchUrl();
+  }
+
+  fetchUrl = () => {
+    const url = window.location.pathname
+    return(url.replace(/\//g,""))
   }
 
   fetchBoard = () => {
     db.collection("Workspaces")
-      .doc("aRzyA8nDdTpij51kLFMr")
+      .where("name", "==", this.fetchUrl())
       .get()
       .then((res) => {
-        this.setState(res.data());
-        console.log('fetch sucess')
+        const result = (res.docs.map((doc) => doc.data()));
+        this.setState(result[0])
       })
       .catch((error) => console.log(error));
   };
@@ -49,9 +55,9 @@ class Trello extends React.Component {
   postBoard(snapshot) {
     delete snapshot.popup
     delete snapshot.popupInfo
-    db.collection("Workspaces").doc("aRzyA8nDdTpij51kLFMr").set(snapshot);
+    db.collection("Workspaces").doc(this.fetchUrl()).set(snapshot);
     this.fetchBoard();
-  };
+  };  
 
   addColumn(e) {
     e.preventDefault();
@@ -160,7 +166,8 @@ class Trello extends React.Component {
             );
           })}
           <Button onClick={(e) => this.addColumn(e)}>Add List</Button>
-            <Popup fetchBoard={this.fetchBoard} handler={this.handler} trigger={this.state.popup} info={this.state.popupInfo}>
+
+            <Popup fetchurl={this.fetchUrl} fetchBoard={this.fetchBoard} handler={this.handler} trigger={this.state.popup} info={this.state.popupInfo}>
             </Popup>
         </Container>
       </DragDropContext>
