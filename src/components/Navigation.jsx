@@ -22,7 +22,7 @@ const Navigation = () => {
   return (
     <Navbar bg="light" expand="lg">
       <Container>
-        <Navbar.Brand>Jello</Navbar.Brand>
+        <Navbar.Brand><h2>📈 Jello</h2></Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ms-auto">

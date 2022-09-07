@@ -149,7 +149,7 @@ function Popup(props) {
                   <Form.Control
                     onChange={(e) => setTitle(e.target.value)}
                     type="text"
-                    placeholder={props.info.task.content}
+                    value={props.info.task.content}
                   />
                 </Form.Group>
 
@@ -160,7 +160,7 @@ function Popup(props) {
                     type="text"
                     as="textarea"
                     rows="5"
-                    placeholder={props.info.task.description}
+                    value={props.info.task.description}
                   />
                 </Form.Group>
               </Form>
