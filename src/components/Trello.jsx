@@ -54,7 +54,7 @@ class Trello extends React.Component {
       .then((res) => {
         const result = res.docs.map((doc) => doc.data());
         this.setState(result[0]);
-        console.log('sucess!')
+        console.log("sucess!");
       })
       .catch((error) => console.log(error));
   };
@@ -160,7 +160,7 @@ class Trello extends React.Component {
   render() {
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-          <hr/>
+        <hr />
 
         <Container>
           {this.state.columnOrder.map((columnId) => {
@@ -188,8 +188,7 @@ class Trello extends React.Component {
             handler={this.handler}
             trigger={this.state.popup}
             info={this.state.popupInfo}
-          >
-          </Popup>
+          ></Popup>
         </Container>
       </DragDropContext>
     );

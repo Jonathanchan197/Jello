@@ -32,7 +32,7 @@ const Home = () => {
   const [workspaceForm, setWorkspaceForm] = useState("");
   const [inviteprompt, setInviteprompt] = useState(false);
   const [search, setSearch] = useState("");
-  const [sendInvite, setSendInvite] = useState("")
+  const [sendInvite, setSendInvite] = useState("");
   const handleInviteShow = () => setInviteprompt(true);
   const auth = getAuth();
   const navigate = useNavigate();
@@ -49,22 +49,23 @@ const Home = () => {
 
   const handleSearch = async (e, email) => {
     e.preventDefault();
-    setSearch(email)
-    console.log(email)
-    const tempData = await db.collection('Users')
-    .doc(email)
-    .get()
-    .then((res) => (res.data()))
-    const temp = tempData
+    setSearch(email);
+    console.log(email);
+    const tempData = await db
+      .collection("Users")
+      .doc(email)
+      .get()
+      .then((res) => res.data());
+    const temp = tempData;
     temp.notifications.push({
       user: user,
-      workspace: workspaceForm
-    })
-    db.collection('Users').doc(email).set(temp)
+      workspace: workspaceForm,
+    });
+    db.collection("Users").doc(email).set(temp);
     setSearch("");
     setWorkspaceForm("");
     setInviteprompt(false);
-  }
+  };
 
   const searchMembers = (e) => {
     if (e !== "") {
@@ -144,11 +145,6 @@ const Home = () => {
   return (
     <div>
       <hr />
-      <Container>
-      <h4>Welcome Back!</h4>
-      <h6>{user}</h6>
-      </Container>
-      <hr />
 
       <h4>Your workspaces:</h4>
       <Modal show={deleteprompt} onHide={() => setDeleteprompt(false)}>
@@ -171,39 +167,44 @@ const Home = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      
+
       <Row xs={1} md={4} className="g-4">
         {workspaces.length ? (
           workspaces.map((w) => (
             <Col>
               <div className="card-block">
-              <Card key={w.name} style={{ width: "18rem" }}>
-                <Card.Body>
-                  <Card.Title>
-                    <Link to={`/${w.name}`} className="nav-link">
-                      {w.name}
-                    </Link>
-                  </Card.Title>
-                  <Card.Text>
-                    <h6>Members:</h6>
-                    {w.users.map((user) => (
-                      <li key={user}>{user}</li>
-                    ))}
-                  </Card.Text>
-                  <Button variant="light" onClick={() => {handleInviteShow() ; setWorkspaceForm(w.name)}}>
-                    Invite Members
-                  </Button>
-                  <Delete
-                    onClick={() => {
-                      setDeleteprompt(true);
-                      setWorkspaceForm(w.name);
-                    }}
-                  >
-                    🗑️
-                  </Delete>
-                </Card.Body>
-                
-              </Card>
+                <Card key={w.name} style={{ width: "18rem" }}>
+                  <Card.Body>
+                    <Card.Title>
+                      <Link to={`/${w.name}`} className="nav-link">
+                        {w.name}
+                      </Link>
+                    </Card.Title>
+                    <Card.Text>
+                      <h6>Members:</h6>
+                      {w.users.map((user) => (
+                        <li key={user}>{user}</li>
+                      ))}
+                    </Card.Text>
+                    <Button
+                      variant="light"
+                      onClick={() => {
+                        handleInviteShow();
+                        setWorkspaceForm(w.name);
+                      }}
+                    >
+                      Invite Members
+                    </Button>
+                    <Delete
+                      onClick={() => {
+                        setDeleteprompt(true);
+                        setWorkspaceForm(w.name);
+                      }}
+                    >
+                      🗑️
+                    </Delete>
+                  </Card.Body>
+                </Card>
               </div>
             </Col>
           ))
@@ -213,10 +214,9 @@ const Home = () => {
       </Row>
       <hr />
       <div className="card-block">
-
-      <Button variant="light" onClick={handleShow}>
-        Add Workspace
-      </Button>
+        <Button variant="light" onClick={handleShow}>
+          Add Workspace
+        </Button>
       </div>
       {/* create workspace */}
       <Modal
@@ -270,8 +270,14 @@ const Home = () => {
               filteredMembers.map((m) => (
                 <div className="text-center">
                   <Col>
-                    <Card key={m.email} style={{ width: "14.5rem"}}>
-                      <Button variant="light" onClick={(e) => handleSearch(e, m.email)}> {m.email}</Button>
+                    <Card key={m.email} style={{ width: "14.5rem" }}>
+                      <Button
+                        variant="light"
+                        onClick={(e) => handleSearch(e, m.email)}
+                      >
+                        {" "}
+                        {m.email}
+                      </Button>
                     </Card>
                   </Col>
                 </div>

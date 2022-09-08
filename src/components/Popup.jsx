@@ -73,12 +73,12 @@ function Popup(props) {
     tempDatabase.tasks[currentTask] = {
       content: title,
       description: description,
-      id: props.info.task.id
+      id: props.info.task.id,
     };
     props.info.task.content = title;
     props.info.task.description = description;
     db.collection("Workspaces").doc(id).set(tempDatabase);
-    setTitle("Edit me!")
+    setTitle("Edit me!");
   };
 
   const closePopup = (e) => {
@@ -86,7 +86,7 @@ function Popup(props) {
     if (!edit) {
       setEdit(!edit);
     }
-    console.log(id)
+    console.log(id);
     props.handler(e);
   };
 
@@ -100,20 +100,20 @@ function Popup(props) {
         setTempDatabase(res.data());
       })
       .catch((error) => console.log(error));
-  }
+  };
 
   const deleteTask = (e) => {
     e.preventDefault();
-    console.log(tempDatabase)
+    console.log(tempDatabase);
     const currentTask = [props.info.task.id];
     const currentLocation = [props.info.column.id];
     const currentIndex = [props.info.index];
     delete tempDatabase.tasks[currentTask];
     tempDatabase.columns[currentLocation].taskIds.pop([currentIndex]);
     db.collection("Workspaces").doc(id).set(tempDatabase);
-    closePopup(e)
+    closePopup(e);
     props.fetchBoard();
-  }
+  };
 
   return props.trigger ? (
     <div className="popup">
@@ -164,7 +164,7 @@ function Popup(props) {
                   />
                 </Form.Group>
               </Form>
-          <Button onClick={(e) => deleteTask(e)}>Delete Task</Button>
+              <Button onClick={(e) => deleteTask(e)}>Delete Task</Button>
             </>
           )}
         </Content>

@@ -24,7 +24,7 @@ const TaskList = styled.div`
 `;
 
 const Button = styled.button`
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   border: 1px solid lightgrey;
   color: black;
   margin: 0 1em;
@@ -48,17 +48,18 @@ export default class Column extends React.Component {
   }
 
   fetchUrl = () => {
-    const url = window.location.pathname
-    return(url.replace(/\//g,""))
-  }
+    const url = window.location.pathname;
+    return url.replace(/\//g, "");
+  };
 
   fetchBoard = async () => {
-    await db.collection("Workspaces")
+    await db
+      .collection("Workspaces")
       .where("name", "==", this.fetchUrl())
       .get()
       .then((res) => {
-        const result = (res.docs.map((doc) => doc.data()));
-        this.setState(result[0])
+        const result = res.docs.map((doc) => doc.data());
+        this.setState(result[0]);
       })
       .catch((error) => console.log(error));
   };
@@ -73,31 +74,30 @@ export default class Column extends React.Component {
     e.preventDefault();
     const random_id = (Math.random() + 1).toString(36).substring(7);
     const column = e.target.value;
-    let tempState = this.state
-    delete tempState.edit
+    let tempState = this.state;
+    delete tempState.edit;
     tempState.columns[column].taskIds.push(random_id);
     tempState.tasks = {
-              ...this.state.tasks,
-              [random_id]: { id: random_id, content: "Edit me!" },
-            }
+      ...this.state.tasks,
+      [random_id]: { id: random_id, content: "Edit me!" },
+    };
     this.postBoard(tempState);
   };
 
   handleEdit = (e) => {
     e.preventDefault();
-    this.setState({edit: true})
-  }
+    this.setState({ edit: true });
+  };
 
   submitEdit = (e) => {
     e.preventDefault();
-    this.setState({edit: false})
-    let tempState = this.state
-    const currentName = this.props.column.id
-    delete tempState.edit
-    tempState.columns[currentName].title = e.target.value
+    this.setState({ edit: false });
+    let tempState = this.state;
+    const currentName = this.props.column.id;
+    delete tempState.edit;
+    tempState.columns[currentName].title = e.target.value;
     this.postBoard(tempState);
-  }
-
+  };
 
   deleteColumn = (e) => {
     e.preventDefault();
@@ -105,7 +105,7 @@ export default class Column extends React.Component {
     delete tempState.columns[e.target.value];
     tempState.columnOrder.pop(e.target.value);
     this.postBoard(tempState);
-    console.log(tempState)
+    console.log(tempState);
   };
 
   render() {
@@ -114,12 +114,14 @@ export default class Column extends React.Component {
         {this.state.edit ? (
           <>
             <form onBlur={(e) => this.submitEdit(e)} value="input">
-                <input type="text" placeholder={this.props.column.title}/>
+              <input type="text" placeholder={this.props.column.title} />
             </form>
           </>
         ) : (
           <>
-            <Title onDoubleClick={(e) => this.handleEdit(e)}>{this.props.column.title}</Title>
+            <Title onDoubleClick={(e) => this.handleEdit(e)}>
+              {this.props.column.title}
+            </Title>
           </>
         )}
         <Droppable droppableId={this.props.column.id}>

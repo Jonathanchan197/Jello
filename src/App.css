@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600&display=swap');
 
 body {
   background-image: url("/src/assets/images/background.gif");
@@ -13,4 +13,24 @@ body {
 
 .card-block {
  opacity: .9;
+}
+
+.card-input {
+  opacity: .8;
+ }
+
+a:link {
+  color: #B6808F;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #2D5987;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+h2 {
+  font-weight: 550;
 }
