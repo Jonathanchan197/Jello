@@ -61,7 +61,7 @@ const Button = styled.button`
 
 function Popup(props) {
   const [edit, setEdit] = useState(true);
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState("Edit me!");
   const [description, setDescription] = useState("");
   const [tempDatabase, setTempDatabase] = useState({});
   const { id } = useParams();
@@ -78,6 +78,7 @@ function Popup(props) {
     props.info.task.content = title;
     props.info.task.description = description;
     db.collection("Workspaces").doc(id).set(tempDatabase);
+    setTitle("Edit me!")
   };
 
   const closePopup = (e) => {
@@ -108,7 +109,6 @@ function Popup(props) {
     const currentLocation = [props.info.column.id];
     const currentIndex = [props.info.index];
     delete tempDatabase.tasks[currentTask];
-    console.log(tempDatabase)
     tempDatabase.columns[currentLocation].taskIds.pop([currentIndex]);
     db.collection("Workspaces").doc(id).set(tempDatabase);
     closePopup(e)
@@ -149,7 +149,7 @@ function Popup(props) {
                   <Form.Control
                     onChange={(e) => setTitle(e.target.value)}
                     type="text"
-                    value={props.info.task.content}
+                    value={title}
                   />
                 </Form.Group>
 

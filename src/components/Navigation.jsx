@@ -1,41 +1,67 @@
 import { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
+import Badge from "react-bootstrap/Badge";
+import Button from "react-bootstrap/Button";
 import Navbar from "react-bootstrap/Navbar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../context/Auth";
+import { db } from "../firebase";
 
 const Navigation = () => {
   const [isUser, setIsUser] = useState(false);
+  const [notifications, setNotifications] = useState("");
   const { user } = UserAuth();
+  const navigation = useNavigate();
+  const [count, setCount] = useState(0)
 
-  const checkUser = () => {
-    if (user) {
-      setIsUser(true);
-    }
-  };
+  const fetchNotifications = async () => {
+    if(count<1) {
+   await db.collection("Users")
+          .doc(user.email)
+          .get()
+          .then((res) => setNotifications(res.data()))
+          setCount(1)
+        }
+  }
+  
+  const handleNavigation = () => {
+    navigation(`/profile/${user.email}`)
+  }
+
+  const handleHome = () => {
+    navigation('/home')
+  }
 
   useEffect(() => {
+    const checkUser = () => {
+      if (user) {
+        setIsUser(true);
+      }
+    };
     checkUser();
-  }, [user]);
+    fetchNotifications();
+  }, [user, notifications]);
 
   return (
-    <Navbar bg="light" expand="lg">
+    <div className="color-nav">
+    <Navbar variant="light" expand="lg">
+      
       <Container>
-        <Navbar.Brand><h2>📈 Jello</h2></Navbar.Brand>
+        <Navbar.Brand onClick={handleHome}>
+          <h2>Jello</h2>
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ms-auto">
             {isUser ? (
               <>
-                <Link to="/home" className="nav-link">
-                  Home
-                </Link>
+                <Button className="color-nav" onClick={handleHome} variant="light">Home</Button>
+                <Button className="color-nav" onClick={handleNavigation} variant="light">
+                  Profile <Badge bg="danger">{notifications ? notifications.notifications.length : <></>}</Badge>
+                  <span className="visually-hidden">unread messages</span>
+                </Button>
                 <Navbar.Toggle />
-                <Navbar.Text>
-                  | Signed in as:{" "}
-                  <Link to="/profile">{user && user.email}</Link>
-                </Navbar.Text>
               </>
             ) : (
               <>
@@ -51,6 +77,7 @@ const Navigation = () => {
         </Navbar.Collapse>
       </Container>
     </Navbar>
+    </div>
   );
 };
 

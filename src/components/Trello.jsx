@@ -12,7 +12,7 @@ const Container = styled.div`
 const Button = styled.button`
   background: transparent;
   border-radius: 3px;
-  border: 2px solid black;
+  border: 1px solid lightgrey;
   color: black;
   margin: 0 1em;
   height: 50px;
@@ -23,6 +23,7 @@ const Button = styled.button`
 class Trello extends React.Component {
   constructor(props) {
     super(props);
+    this.updateState = this.updateState.bind(this);
   }
 
   state = {
@@ -36,49 +37,59 @@ class Trello extends React.Component {
     this.fetchUrl();
   }
 
-  fetchUrl = () => {
-    const url = window.location.pathname
-    return(url.replace(/\//g,""))
+  updateState(snapshot) {
+    this.setState(snapshot);
   }
 
-  fetchBoard = () => {
-    db.collection("Workspaces")
+  fetchUrl = () => {
+    const url = window.location.pathname;
+    return url.replace(/\//g, "");
+  };
+
+  fetchBoard = async () => {
+    await db
+      .collection("Workspaces")
       .where("name", "==", this.fetchUrl())
       .get()
       .then((res) => {
-        const result = (res.docs.map((doc) => doc.data()));
-        this.setState(result[0])
+        const result = res.docs.map((doc) => doc.data());
+        this.setState(result[0]);
+        console.log('sucess!')
       })
       .catch((error) => console.log(error));
   };
 
   postBoard(snapshot) {
-    delete snapshot.popup
-    delete snapshot.popupInfo
+    delete snapshot.popup;
+    delete snapshot.popupInfo;
     db.collection("Workspaces").doc(this.fetchUrl()).set(snapshot);
-    this.fetchBoard();
-  };  
+    // this.fetchBoard();
+    this.setState(snapshot);
+  }
 
   addColumn(e) {
     e.preventDefault();
     const random_id = (Math.random() + 1).toString(36).substring(7);
-    let temp = this.state
-    temp.columnOrder.push(random_id)
-    temp.columns = {...temp.columns, [random_id]: {
+    let temp = this.state;
+    temp.columnOrder.push(random_id);
+    temp.columns = {
+      ...temp.columns,
+      [random_id]: {
         id: random_id,
-        title: 'Edit me!',
+        title: "Edit me!",
         taskIds: [],
-      },}
-    this.postBoard(temp)
+      },
+    };
+    this.postBoard(temp);
   }
 
   handler = (e, info) => {
     e.preventDefault();
     this.setState({
-        popupInfo: info,
-        popup: !this.state.popup
-    })
-  }
+      popupInfo: info,
+      popup: !this.state.popup,
+    });
+  };
 
   onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
@@ -116,7 +127,7 @@ class Trello extends React.Component {
       };
 
       this.setState(newState);
-      this.postBoard(newState)
+      this.postBoard(newState);
       return;
     }
 
@@ -143,12 +154,14 @@ class Trello extends React.Component {
       },
     };
     this.setState(newState);
-    this.postBoard(newState)
+    this.postBoard(newState);
   };
 
   render() {
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
+          <hr/>
+
         <Container>
           {this.state.columnOrder.map((columnId) => {
             const column = this.state.columns[columnId];
@@ -157,6 +170,7 @@ class Trello extends React.Component {
             );
             return (
               <Column
+                updateState={this.updateState}
                 handler={this.handler}
                 fetchBoard={this.fetchBoard}
                 key={column.id}
@@ -167,8 +181,15 @@ class Trello extends React.Component {
           })}
           <Button onClick={(e) => this.addColumn(e)}>Add List</Button>
 
-            <Popup fetchurl={this.fetchUrl} fetchBoard={this.fetchBoard} handler={this.handler} trigger={this.state.popup} info={this.state.popupInfo}>
-            </Popup>
+          <Popup
+            postBoard={this.postBoard}
+            fetchurl={this.fetchUrl}
+            fetchBoard={this.fetchBoard}
+            handler={this.handler}
+            trigger={this.state.popup}
+            info={this.state.popupInfo}
+          >
+          </Popup>
         </Container>
       </DragDropContext>
     );

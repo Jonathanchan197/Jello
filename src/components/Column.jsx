@@ -24,9 +24,8 @@ const TaskList = styled.div`
 `;
 
 const Button = styled.button`
-  background: transparent;
-  border-radius: 3px;
-  border: 1.5px solid grey;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid lightgrey;
   color: black;
   margin: 0 1em;
   height: 30px;
@@ -53,19 +52,21 @@ export default class Column extends React.Component {
     return(url.replace(/\//g,""))
   }
 
-  fetchBoard = () => {
-    db.collection("Workspaces")
-      .doc(this.fetchUrl())
+  fetchBoard = async () => {
+    await db.collection("Workspaces")
+      .where("name", "==", this.fetchUrl())
       .get()
       .then((res) => {
-        this.setState(res.data());
+        const result = (res.docs.map((doc) => doc.data()));
+        this.setState(result[0])
       })
       .catch((error) => console.log(error));
   };
 
-  postBoard = (snapshot) => {
-    db.collection("Workspaces").doc(this.fetchUrl()).set(snapshot);
-    this.props.fetchBoard();
+  postBoard = async (snapshot) => {
+    await db.collection("Workspaces").doc(this.fetchUrl()).set(snapshot);
+    this.props.updateState(snapshot);
+    // this.props.fetchBoard();
   };
 
   handleSubmit = (e) => {
@@ -104,6 +105,7 @@ export default class Column extends React.Component {
     delete tempState.columns[e.target.value];
     tempState.columnOrder.pop(e.target.value);
     this.postBoard(tempState);
+    console.log(tempState)
   };
 
   render() {

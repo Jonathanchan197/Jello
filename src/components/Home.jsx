@@ -8,6 +8,10 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import styled from "styled-components";
 
+const Container = styled.div`
+  margin-top: 25px;
+`;
+
 const Delete = styled.button`
   position: absolute;
   top: 8px;
@@ -19,17 +23,61 @@ const Delete = styled.button`
 
 const Home = () => {
   const [user, setUser] = useState("");
+  const [members, setMembers] = useState([]);
+  const [filteredMembers, setFilteredMembers] = useState([]);
   const [workspaces, setWorkspaces] = useState([]);
-  const [show, setShow] = useState(false);
   const [deleteprompt, setDeleteprompt] = useState(false);
-  const [workspaceForm, setWorkspaceForm] = useState("");
+  const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
+  const [workspaceForm, setWorkspaceForm] = useState("");
+  const [inviteprompt, setInviteprompt] = useState(false);
+  const [search, setSearch] = useState("");
+  const [sendInvite, setSendInvite] = useState("")
+  const handleInviteShow = () => setInviteprompt(true);
   const auth = getAuth();
   const navigate = useNavigate();
 
-  const handleClose = () => {
+  const handleWorkspaceClose = () => {
     setShow(false);
     setWorkspaceForm("");
+  };
+
+  const handleInviteClose = () => {
+    setInviteprompt(false);
+    setSearch("");
+  };
+
+  const handleSearch = async (e, email) => {
+    e.preventDefault();
+    setSearch(email)
+    console.log(email)
+    const tempData = await db.collection('Users')
+    .doc(email)
+    .get()
+    .then((res) => (res.data()))
+    const temp = tempData
+    temp.notifications.push({
+      user: user,
+      workspace: workspaceForm
+    })
+    db.collection('Users').doc(email).set(temp)
+    setSearch("");
+    setWorkspaceForm("");
+    setInviteprompt(false);
+  }
+
+  const searchMembers = (e) => {
+    if (e !== "") {
+      const filteredSearch = members.filter((item) => {
+        return Object.values(item)
+          .join("")
+          .toLowerCase()
+          .includes(e.toLowerCase());
+      });
+      setFilteredMembers(filteredSearch);
+    } else {
+      setFilteredMembers(members);
+    }
   };
 
   const handleDelete = async (e) => {
@@ -70,6 +118,15 @@ const Home = () => {
       });
   };
 
+  const fetchMembers = async () => {
+    db.collection("Users")
+      .where("email", "!=", user)
+      .get()
+      .then((res) => {
+        setMembers(res.docs.map((doc) => doc.data()));
+      });
+  };
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -80,13 +137,18 @@ const Home = () => {
       }
     });
 
+    fetchMembers();
     fetchWorkspace();
   }, [user]);
 
   return (
     <div>
-      <h4>Welcome Back! {user}</h4>
-      <hr/>
+      <hr />
+      <Container>
+      <h4>Welcome Back!</h4>
+      <h6>{user}</h6>
+      </Container>
+      <hr />
 
       <h4>Your workspaces:</h4>
       <Modal show={deleteprompt} onHide={() => setDeleteprompt(false)}>
@@ -96,7 +158,9 @@ const Home = () => {
           </Modal.Title>
         </Modal.Header>
         <div align="center">
-          <Modal.Body><h4>{workspaceForm}</h4></Modal.Body>
+          <Modal.Body>
+            <h4>{workspaceForm}</h4>
+          </Modal.Body>
         </div>
         <Modal.Footer>
           <Button variant="success" onClick={(e) => handleDelete(e)}>
@@ -107,11 +171,12 @@ const Home = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
+      
       <Row xs={1} md={4} className="g-4">
         {workspaces.length ? (
           workspaces.map((w) => (
             <Col>
+              <div className="card-block">
               <Card key={w.name} style={{ width: "18rem" }}>
                 <Card.Body>
                   <Card.Title>
@@ -120,12 +185,14 @@ const Home = () => {
                     </Link>
                   </Card.Title>
                   <Card.Text>
-                    Members:
+                    <h6>Members:</h6>
                     {w.users.map((user) => (
                       <li key={user}>{user}</li>
                     ))}
                   </Card.Text>
-                  <Card.Link href={`/workspace/:id`}>Invite Members</Card.Link>
+                  <Button variant="light" onClick={() => {handleInviteShow() ; setWorkspaceForm(w.name)}}>
+                    Invite Members
+                  </Button>
                   <Delete
                     onClick={() => {
                       setDeleteprompt(true);
@@ -135,21 +202,26 @@ const Home = () => {
                     🗑️
                   </Delete>
                 </Card.Body>
+                
               </Card>
+              </div>
             </Col>
           ))
         ) : (
           <></>
         )}
       </Row>
-      <hr/>
+      <hr />
+      <div className="card-block">
+
       <Button variant="light" onClick={handleShow}>
         Add Workspace
       </Button>
-
+      </div>
+      {/* create workspace */}
       <Modal
         show={show}
-        onHide={handleClose}
+        onHide={handleWorkspaceClose}
         backdrop="static"
         keyboard={false}
       >
@@ -162,6 +234,7 @@ const Home = () => {
               <Form.Control
                 onChange={(e) => setWorkspaceForm(e.target.value)}
                 type="text"
+                placeholder="Enter Name"
               />
             </Form.Group>
           </Form>
@@ -171,6 +244,43 @@ const Home = () => {
             Submit
           </Button>
         </Modal.Footer>
+      </Modal>
+      {/* invite members */}
+      <Modal
+        show={inviteprompt}
+        onHide={handleInviteClose}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Sending invites for "{workspaceForm}"</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Control
+                onChange={(e) => searchMembers(e.target.value)}
+                type="text"
+                placeholder="Search..."
+              />
+            </Form.Group>
+          </Form>
+          <Row xs={5} md={2} className="g-1">
+            {filteredMembers.length ? (
+              filteredMembers.map((m) => (
+                <div className="text-center">
+                  <Col>
+                    <Card key={m.email} style={{ width: "14.5rem"}}>
+                      <Button variant="light" onClick={(e) => handleSearch(e, m.email)}> {m.email}</Button>
+                    </Card>
+                  </Col>
+                </div>
+              ))
+            ) : (
+              <></>
+            )}
+          </Row>
+        </Modal.Body>
       </Modal>
     </div>
   );

@@ -3,18 +3,19 @@ import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
 
 const Container = styled.div`
+background: rgba(255,255,255,0.1);
+
   border: 1px solid lightgrey;
   border-radius: 2px;
   padding: 8px;
   margin-bottom: 8px;
-  background-color: white;
   display: flex;
 `;
 
 const Handle = styled.div`
   width: 20px;
   height: 20px;
-  background-color: grey;
+  background-color: #2D5987;
   border-radius 4px;
   margin-right: 8px
 `;

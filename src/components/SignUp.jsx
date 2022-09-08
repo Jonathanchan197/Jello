@@ -3,6 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { Link, useNavigate } from "react-router-dom";
 import {UserAuth} from '../context/Auth'
+import { db } from "../firebase";
  
 const SignUp = () => {
   const [email, setEmail] = useState('')
@@ -16,7 +17,12 @@ const SignUp = () => {
     setError('')
     try {
         await createUser(email, password)
-        navigate('/profile')
+        const template = {
+          notifications: [],
+          email: email,
+        };
+        db.collection("Users").doc(email).set(template);
+        navigate('/home')
     } catch (e) {
         setError(e.message)
         console.log(e.message)

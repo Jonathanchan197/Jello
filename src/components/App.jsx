@@ -9,6 +9,7 @@ import Trello from "./Trello";
 import { AuthContextProvider } from "../context/Auth";
 import ProtectedRoute from "./ProtectedRoute";
 import { Container } from "react-bootstrap";
+import '../App.css'
 
 function App() {
   return (
@@ -25,7 +26,9 @@ function App() {
             <Route path={":id"} element={<Trello />} />
           </Route>
           <Route path="/home" element={<ProtectedRoute><Home/></ProtectedRoute>}/>
-          <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>}/>
+          <Route path={"/profile"}>
+            <Route path={":id"} element={<ProtectedRoute><Profile/></ProtectedRoute>}/>
+          </Route>
         </Routes>
         </Container>
       </AuthContextProvider>
