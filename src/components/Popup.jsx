@@ -54,7 +54,6 @@ const Button = styled.button`
   border: 2px solid black;
   color: black;
   margin: 0 1em;
-  height: 30px;
   width: 110px;
   margin-top: 8px;
 `;
