@@ -1,71 +1,58 @@
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 # Jello
+
+Try out **Jello** [here](https://friendly-rabanadas-95dae4.netlify.app/)!
+
+Jello is a productivity app with a mobile first design inspired by Trello. After using Trello for many of my previous projects, I decided to see what it takes to build a web-based app like Trello. Users can create task boards that are fully drag and droppable and invite other users to their workspace to edit boards they've created. 
+
+## Table of Contents
+* [Technologies](#technologies)
+* [Usage](#usage)
+* [Authentication](#authentication)
+* [Task Board](#task-board)
+* [Profile Page](#profile-page)
+* [Screenshots](#screenshots)
+
+
+## Technologies
+* React 18.2.0 (w/ React Router Dom 6.3.0)
+* npm 8.11
+* JavaScript
+* CSS
+* Firebase
+* Netlify
+
+## Usage
+No installation is required, Jello is deployed [here](https://friendly-rabanadas-95dae4.netlify.app/) You can use the test account or create your own
+* Test Account:
+    - Login: chicken@ga.co
+    - Password: chicken
+
+## Authentication
+Accounts created are stored on in the firebase authentication database. Auth.js checks if the user logged-in is present in firebase and logs you into an auth session until you log-out.
+
+## Task Board
+The board data is stored in the firebase database, you can see a sample board in the initial-data.js document. The drag and drop feature allows you to move tasks between lists using [react beautiful dnd](https://github.com/atlassian/react-beautiful-dnd). Tasks can be moved by dragging the handle box and clicking the task allows you to edit and view more information about the task. List can be generated by adding press list and the name of the list can be edited by double-clicking the list name.
+
+## Workspaces
+Workspaces utilize modals to trigger prompts for the user. A workspace can be made and deleted by workspace members. You can add members to your workspace, where you'll be prompted to search for users in the database. If you completely backspace the search field, a list of 10 users in the database will be shown.
+
+## Profile Page
+Workspace invitations are shown here, where users can accept or decline workspace invites. In-addition a notification icon in the nav shows your current pending invites when you log-in. 
+
+## Screenshots
+![Login](../jello/src/assets/images/Login.png)
+![Workspace](../jello/src/assets/images/Workspace1.png)
+![TaskBoard](../jello/src/assets/images/TaskBoard.png)
+![TaskInfo](../jello/src/assets/images/TaskDescription.png)
+![Dashboard](../jello/src/assets/images/Dashboard.png)
+![InviteSearch](../jello/src/assets/images/InviteSearch.png)
+![AcceptedBoard](../jello/src/assets/images/AcceptedBoard.png)
+![Mobile](../jello/src/assets/images/MobileWorkspace.png)
+
+
+
+
+## Resources
+* [Firebase Documentation](https://firebase.google.com/docs)
+* [React Beautiful DnD](https://github.com/atlassian/react-beautiful-dnd)
+* [React Bootstrap](https://react-bootstrap.github.io/)

@@ -159,7 +159,7 @@ function Popup(props) {
                     type="text"
                     as="textarea"
                     rows="5"
-                    value={props.info.task.description}
+                    value={description}
                   />
                 </Form.Group>
               </Form>

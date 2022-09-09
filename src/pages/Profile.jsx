@@ -115,11 +115,7 @@ const Profile = () => {
                 <h3>{user && user.email}</h3>
               </Card.Title>
               <Card.Text>
-                some meaningful quote some meaningful quote some meaningful
-                quote some meaningful quote some meaningful quote some
-                meaningful quote some meaningful quote some meaningful quote
-                some meaningful quote some meaningful quote some meaningful
-                quote
+                
               </Card.Text>
               <Button onClick={handleSignout} variant="danger">
                 Log Out

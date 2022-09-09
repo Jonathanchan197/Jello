@@ -1,9 +1,9 @@
 import React from "react";
-import Column from "./Column";
+import Column from "../components/Column";
 import { DragDropContext } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { db } from "../firebase";
-import Popup from "./Popup";
+import Popup from "../components/Popup";
 
 const Container = styled.div`
   display: flex;
