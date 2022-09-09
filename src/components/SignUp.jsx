@@ -30,43 +30,45 @@ const SignUp = () => {
   };
 
   return (
+    <div className="form-container">
       <Form onSubmit={handleSubmit}>
         <h2>Sign Up</h2>
-    <div className="card-input">
-        <Form.Group>
-          <Form.Text className="text-light">{error}</Form.Text>
-        </Form.Group>
-        <Form.Group className="mb-3" id="email">
-          <Form.Label>Email address</Form.Label>
-          <Form.Control
-            onChange={(e) => setEmail(e.target.value)}
-            type="email"
-          />
-        </Form.Group>
+        <div className="card-input">
+          <Form.Group>
+            <Form.Text className="text-light">{error}</Form.Text>
+          </Form.Group>
+          <Form.Group className="mb-3" id="email">
+            <Form.Label>Email address</Form.Label>
+            <Form.Control
+              onChange={(e) => setEmail(e.target.value)}
+              type="email"
+            />
+          </Form.Group>
 
-        <Form.Group className="mb-3" id="password">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            onChange={(e) => setPassword(e.target.value)}
-            type="password"
-          />
-        </Form.Group>
+          <Form.Group className="mb-3" id="password">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              onChange={(e) => setPassword(e.target.value)}
+              type="password"
+            />
+          </Form.Group>
 
-        <Form.Group className="mb-3" id="passwordconfirmation">
-          <Form.Label>Password Confirmation</Form.Label>
-          <Form.Control type="password" />
-        </Form.Group>
-        <Button variant="light" type="submit">
-          Sign Up
-        </Button>
+          <Form.Group className="mb-3" id="passwordconfirmation">
+            <Form.Label>Password Confirmation</Form.Label>
+            <Form.Control type="password" />
+          </Form.Group>
+          <Button variant="light" type="submit">
+            Sign Up
+          </Button>
 
-        <Form.Group>
-          <Form.Text className="text-light">
-            Already have an account? <Link to="/signin">Sign In</Link>
-          </Form.Text>
-        </Form.Group>
-    </div>
+          <Form.Group>
+            <Form.Text className="text-light">
+              Already have an account? <Link to="/signin">Sign In</Link>
+            </Form.Text>
+          </Form.Group>
+        </div>
       </Form>
+    </div>
   );
 };
 

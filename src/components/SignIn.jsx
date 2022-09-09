@@ -24,40 +24,42 @@ const SignIn = () => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <div className="form-container">
+      <Form onSubmit={handleSubmit}>
         <h2>Sign In</h2>
-      <div className="card-input">
-        <Form.Group>
-          <Form.Text className="text-light">{error}</Form.Text>
-        </Form.Group>
-        <Form.Group className="mb-3" id="email">
-          <Form.Label>Email address</Form.Label>
-          <Form.Control
-            onChange={(e) => setEmail(e.target.value)}
-            type="email"
-          />
-        </Form.Group>
+        <div className="card-input">
+          <Form.Group>
+            <Form.Text className="text-light">{error}</Form.Text>
+          </Form.Group>
+          <Form.Group className="mb-3" id="email">
+            <Form.Label>Email address</Form.Label>
+            <Form.Control
+              onChange={(e) => setEmail(e.target.value)}
+              type="email"
+            />
+          </Form.Group>
 
-        <Form.Group className="mb-3" id="password">
-          <Form.Label>Password</Form.Label>
+          <Form.Group className="mb-3" id="password">
+            <Form.Label>Password</Form.Label>
 
-          <Form.Control
-            onChange={(e) => setPassword(e.target.value)}
-            type="password"
-          />
-        </Form.Group>
+            <Form.Control
+              onChange={(e) => setPassword(e.target.value)}
+              type="password"
+            />
+          </Form.Group>
 
-        <Button variant="light" type="submit">
-          Log In
-        </Button>
+          <Button variant="light" type="submit">
+            Log In
+          </Button>
 
-        <Form.Group>
-          <Form.Text className="text-light">
-            Don't have an account? <Link to="/signup">Sign Up</Link>
-          </Form.Text>
-        </Form.Group>
-      </div>
-    </Form>
+          <Form.Group>
+            <Form.Text className="text-light">
+              Don't have an account? <Link to="/signup">Sign Up</Link>
+            </Form.Text>
+          </Form.Group>
+        </div>
+      </Form>
+    </div>
   );
 };
 

@@ -11,6 +11,11 @@ body {
   border: none;
 }
 
+.form-container {
+  width: 400px;
+  margin: 0 auto;
+}
+
 .card-block {
  opacity: .9;
 }
