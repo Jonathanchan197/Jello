@@ -40,14 +40,14 @@ Workspaces utilize modals to trigger prompts for the user. A workspace can be ma
 Workspace invitations are shown here, where users can accept or decline workspace invites. In-addition a notification icon in the nav shows your current pending invites when you log-in. 
 
 ## Screenshots
-![Login](../jello/src/assets/images/Login.png)
-![Workspace](../jello/src/assets/images/Workspace1.png)
-![TaskBoard](../jello/src/assets/images/TaskBoard.png)
-![TaskInfo](../jello/src/assets/images/TaskDescription.png)
-![Dashboard](../jello/src/assets/images/Dashboard.png)
-![InviteSearch](../jello/src/assets/images/InviteSearch.png)
-![AcceptedBoard](../jello/src/assets/images/AcceptedBoard.png)
-![Mobile](../jello/src/assets/images/MobileWorkspace.png)
+![Login](/public/screenshots/Login.png)
+![Workspace](/public/screenshots/Workspace1.png)
+![TaskBoard](/public/screenshots/TaskBoard.png)
+![TaskInfo](/public/screenshots/TaskDescription.png)
+![Dashboard](/public/screenshots/Dashboard.png)
+![InviteSearch](/public/screenshots/InviteSearch.png)
+![AcceptedBoard](/public/screenshots/AcceptedBoard.png)
+![Mobile](/public/screenshots/MobileWorkspace.png)
 
 
 
