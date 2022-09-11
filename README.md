@@ -22,7 +22,7 @@ Jello is a productivity app with a mobile first design inspired by Trello. After
 * Netlify
 
 ## Usage
-No installation is required, Jello is deployed [here](https://friendly-rabanadas-95dae4.netlify.app/), You can use the test account or create your own
+No installation is required, Jello is deployed [here](https://friendly-rabanadas-95dae4.netlify.app/) You can use the test account or create your own
 * Test Account:
     - Login: chicken@ga.co
     - Password: chicken
